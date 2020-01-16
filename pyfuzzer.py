@@ -5,9 +5,12 @@ import urllib3
 
 urllib3.disable_warnings()
 s = requests.Session()
-url = input("url here: ")
+url = input("url here ex https://site.com/: ")
 header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"}
 def fuzz(url):
+	  found = []
+	  redirects = []
+	  not_allowed = []
 	  def checkRobots(url):
 	   	r = s.get(url+"robots.txt", verify=False, timeout=5, headers=header)
 	   	if r.status_code == requests.codes.ok:
@@ -24,13 +27,13 @@ def fuzz(url):
 	  	try:
 	  		for link in open("payload.txt").read().splitlines():
 		  		r = s.get(url+link, verify=False, timeout=5, headers=header)
-		  		print("Trying => {}{}".format(url,link))
+		  		print("Trying => {}".format(url+link))
 		  		if r.status_code == requests.codes.ok:
-		  			print('Found => {}'.format(url+link))
+		  			found.append(url+link)
 		  		elif r.status_code == requests.codes.temporary_redirect:
-		  			print('Redirecting somewhere => {}'.format(url+link))
+		  			redirects.append(url+link)
 		  		elif r.status_code == requests.codes.unauthorized or r.status_code == requests.codes.not_acceptable:
-		  			print('Not_Acceptable => {}'.format(url+link))
+		  			not_allowed.append(url+link)
 		  		else:
 		  			pass
 	  	except:
@@ -38,5 +41,5 @@ def fuzz(url):
 	  		pass			
 	  checkRobots(url)
 	  dirhunt(url)
-
+	  print('Found => {}\nRedirects => {}\nNot Allowed => {}'.format(found,redirects,not_allowed))
 fuzz(url)
