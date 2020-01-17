@@ -36,10 +36,12 @@ def fuzz(url):
 		  			not_allowed.append(url+link)
 		  		else:
 		  			pass
-	  	except:
-	  		print("Check Your Internet!..")
-	  		pass			
+	  	except ConnectionError:
+	  		print('Check Your Internet!..')
+	  	except KeyboardInterrupt:
+	  		print('Keyboard Interruption script Halted')					
 	  checkRobots(url)
 	  dirhunt(url)
 	  print('Found => {}\nRedirects => {}\nNot Allowed => {}'.format(found,redirects,not_allowed))
+	
 fuzz(url)
