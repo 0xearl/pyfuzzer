@@ -4,16 +4,15 @@ import urllib3
 from socket import gethostbyname, gaierror
 from anytree import Node, RenderTree
 
-
 urllib3.disable_warnings()
 s = requests.Session()
-url = input("url here, ex https://site.com/: ")
 header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"}
-def fuzz(url):
-	  found_list = []
-	  redirects_list = []
-	  not_allowed_list = []
-	  not_found_list = []
+found_list = []
+redirects_list = []
+not_allowed_list = []
+not_found_list = []
+class fuzz():
+	  url = input("url here, ex https://site.com/: ")
 	  def checkRobots(url):
 	   	r = s.get(url+"robots.txt", verify=False, timeout=5, headers=header)
 	   	if r.status_code == requests.codes.ok:
@@ -72,4 +71,5 @@ def fuzz(url):
 	  dirhunt(url)
 	  _tree(found_list, redirects_list, not_allowed_list, not_found_list)
 
-fuzz(url)
+if __name__ == '__main__':
+	fuzz()
