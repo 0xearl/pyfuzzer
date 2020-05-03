@@ -1,5 +1,5 @@
 # pyfuzzer
-A Python Fuzzer I Made My Own Way I Guess?<br>
+A Python Directory-Enumeration I Made My Own Way I Guess?<br>
 To Run This Script One Must Have Brain<br>
 ## Installation<br>
 <pre>
