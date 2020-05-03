@@ -11,7 +11,7 @@ not_allowed_list = []
 not_found_list = []
 
 def checkRobots(url):
-	r = session.get(url+'robots.txt')
+	r = session.get(url+'robots.txt', verify=False)
 	if r.status_code == requests.codes.ok:
 		lines = r.text.splitlines()
 		for keyword in lines:
@@ -41,6 +41,8 @@ def dirEnum(url, wordlist):
 		print('[!!] Something Happend Please Try Again. [!!]')
 	except KeyboardInterrupt:
 		print('[!!] Keyboard Interruption [!!]')
+	except requests.exceptions.ReadTimeout:
+		print('[!!] Timeout Error Please Try Increasing The Timeout [!!]')
 def _tree(found_list, redirects_list, not_allowed_list, not_found_list):
 	not_found = Node('[!] Not Found Directories [!]')
 	for url in not_found_list:
@@ -73,7 +75,7 @@ def main():
 	args = parser.parse_args()
 	url = args.url
 	if args.wordlist == None:
-		wordlist = '{}\\payload.txt'.format(os.getcwd())
+		wordlist = '{}/payload.txt'.format(os.getcwd())
 	else:
 		wordlist = args.wordlist
 
