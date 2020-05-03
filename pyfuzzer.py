@@ -14,7 +14,6 @@ not_allowed_list = []
 not_found_list = []
 class fuzz():
 	  parser = argparse.ArgumentParser()
-	  parser.add_argument('-help', help='Usage:python pyfuzzer.py -url https://target.com')
 	  parser.add_argument('-url', help='https://target.com')
 	  parser.add_argument('-wordlist', help='custom wordlist ex: /path/to/wordlist.txt')
 	  args = parser.parse_args()
@@ -23,7 +22,6 @@ class fuzz():
 	  	wordlist = '{}\\payload.txt'.format(os.getcwd())
 	  else:
 	  	wordlist = args.wordlist
-
 	  def checkRobots(url):
 	   	r = s.get(url+"robots.txt", verify=False, timeout=5, headers=header)
 	   	if r.status_code == requests.codes.ok:
