@@ -82,9 +82,9 @@ def main():
 	if args.url is None:
 		parser.print_help()
 	else:
+		print('[!] Starting Script! [!]', end='\n')
 		checkRobots(url)
 		dirEnum(url, wordlist)
-		print('\n')
 		_tree(found_list, not_found_list, not_allowed_list, redirects_list)
 
 if __name__ == '__main__':
