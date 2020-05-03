@@ -15,7 +15,11 @@ pip3 install -r requirements.txt
 <pre>
 <code>
 python pyfuzzer.py -h
-or
-python3 pyfuzzer.py -h
 </code>
+</pre>
+### or
+<pre>
+    <code>
+        python3 pyfuzzer.py -h
+    </code>
 </pre>
