@@ -68,7 +68,7 @@ def _tree(found_list, redirects_list, not_allowed_list, not_found_list):
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument('-url', help='https://target.com')
+	parser.add_argument('-url', help='https://target.com/')
 	parser.add_argument('-wordlist', help='/path/to/wordlist.txt')
 	args = parser.parse_args()
 	url = args.url
