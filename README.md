@@ -19,7 +19,7 @@ python pyfuzzer.py -h
 </pre>
 ### or
 <pre>
-    <code>
-        python3 pyfuzzer.py -h
-    </code>
+<code>
+python3 pyfuzzer.py -h
+</code>
 </pre>
