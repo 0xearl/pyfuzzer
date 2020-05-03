@@ -11,7 +11,7 @@ not_allowed_list = []
 not_found_list = []
 
 def checkRobots(url):
-	session.get(url+'robots.txt')
+	r = session.get(url+'robots.txt')
 	if r.status_code == requests.codes.ok:
 		lines = r.text.splitlines()
 		for keyword in lines:
@@ -25,17 +25,17 @@ def checkRobots(url):
 def dirEnum(url, wordlist):
 	try:
 		for link in open(wordlist).read().splitlines():
-			print('[!] Please Wait.... [!]')
+			print('[!] Please Wait.... [!]', end='\r')
 			r = session.get(url+link, verify=False, timeout=5, headers=header)
 			if r.status_code == requests.codes.ok:
 				found_list.append(url+link)
-			elif r.status_code == requests.code.temporary_redirect:
+			elif r.status_code == requests.codes.temporary_redirect:
 				redirects_list.append(url+link)
-			elif r.status_code == requests.code.unauthorized or r.status_code == requests.codes.not_acceptable:
+			elif r.status_code == requests.codes.unauthorized or r.status_code == requests.codes.not_acceptable:
 				not_allowed_list.append(url+link)
 			else:
 				not_found_list.append(url+link)
-	except socket.ConnectionError:
+	except ConnectionError:
 		print('[!!] Connection Error Please Check Your Internet. [!!]')
 	except socket.gaierror:
 		print('[!!] Something Happend Please Try Again. [!!]')
@@ -45,25 +45,25 @@ def _tree(found_list, redirects_list, not_allowed_list, not_found_list):
 	not_found = Node('[!] Not Found Directories [!]')
 	for url in not_found_list:
 		found_url = Node(url, parent=not_found)
-	for pre,fill,node in renderTree(not_found):
+	for pre,fill,node in RenderTree(not_found):
 		print('%s%s' % (pre, node.name))
 
 	found = Node('[+] Found Directories [+]')
 	for url in found_list:
 		found_url = Node(url, parent=found)
-	for pre,fill,node in renderTree(found):
+	for pre,fill,node in RenderTree(found):
 		print('%s%s' % (pre, node.name))
 
 	not_allowed = Node('[!] Not Found Directories [!]')
 	for url in not_allowed_list:
 		found_url = Node(url, parent=not_allowed)
-	for pre,fill,node in renderTree(not_allowed):
+	for pre,fill,node in RenderTree(not_allowed):
 		print('%s%s' % (pre, node.name))
 
 	redirects = Node('[!] Redirecting Directories [!]')
 	for url in redirects_list:
 		found_url = Node(url, parent=redirects)
-	for pre,fill,node in renderTree(redirects):
+	for pre,fill,node in RenderTree(redirects):
 		print('%s%s' % (pre, node.name))
 
 def main():
