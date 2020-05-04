@@ -12,7 +12,7 @@ try:
     LC = '\033[1;36m'
 except:
     pass
-    R, G, Y, B, LR, LC = ''
+    R, G, B, LR, LC = ''
 
 urllib3.disable_warnings()
 session = requests.Session()
