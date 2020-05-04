@@ -38,7 +38,7 @@ def dirEnum(url, wordlist):
 	try:
 		for link in open(wordlist).read().splitlines():
 			print(f'{B}[!] Please Wait.... [!]', end='\r')
-			r = session.get(url+link, verify=False, timeout=5, headers=header)
+			r = session.get(url+link, verify=False, timeout=5, headers=header, allow_redirects=True)
 			if r.status_code == requests.codes.ok:
 				found_list.append(url+link)
 			elif r.status_code == requests.codes.temporary_redirect:
@@ -49,16 +49,16 @@ def dirEnum(url, wordlist):
 				not_found_list.append(url+link)
 	except requests.exceptions.ConnectionError:
 		logging.critical('Internet is Down')
-		print('[!!] Connection Error Please Check Your Internet. [!!]')
+		print(f'{R}[!!] Connection Error Please Check Your Internet. [!!]')
 	except socket.gaierror:
 		logging.error('Something Happend Bruh')
-		print('[!!] Something Happend Please Try Again. [!!]')
+		print(f'{LC}[!!] Something Happend Please Try Again. [!!]')
 	except KeyboardInterrupt:
 		logging.debug('You pressed Something while the script is running')
-		print('[!!] Keyboard Interruption [!!]')
+		print(f'{R}[!!] Keyboard Interruption [!!]')
 	except requests.exceptions.ReadTimeout:
 		logging.warning('Try Increasing The timeout')
-		print('[!!] Timeout Error Please Try Increasing The Timeout [!!]')
+		print(f'{LC}[!!] Timeout Error Please Try Increasing The Timeout [!!]')
 
 def _tree(found_list, redirects_list, not_allowed_list, not_found_list):
 	not_found = Node(f'{R}[!] Not Found Directories [!]')
@@ -99,10 +99,14 @@ def main():
 	if args.url is None:
 		parser.print_help()
 	else:
-		print(f'{LR}[!] Starting Script! [!]', end='\n')
-		checkRobots(url)
-		dirEnum(url, wordlist)
-		_tree(found_list, not_found_list, not_allowed_list, redirects_list)
+		try:
+			print(f'{LR} [-----Starting Script-----]')
+			checkRobots(url)
+			dirEnum(url, wordlist)
+			_tree(found_list, not_found_list, not_allowed_list, redirects_list)
+		except KeyboardInterrupt:
+			logging.debug('You Pressed Something While The Script Is Running')
+			print(f'{R}[!!] Keyboard Interruption [!!]')
 
 if __name__ == '__main__':
 	main()
