@@ -1,7 +1,6 @@
-import requests, re, urllib3, argparse, os
+import requests, re, urllib3, argparse, os, logging
 import socket
 from anytree import Node, RenderTree
-import logging
 try:
     from colorama import init
     init()
