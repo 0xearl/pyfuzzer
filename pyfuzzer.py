@@ -36,9 +36,10 @@ def checkRobots(url):
 
 def dirEnum(url, wordlist):
 	try:
+		print(f'{B}[!] Please Wait.... [!]')
+		print('\n')
 		for link in open(wordlist).read().splitlines():
-			print(f'{B}[!] Please Wait.... [!]', end='\r')
-			r = session.get(url+link, verify=False, timeout=5, headers=header, allow_redirects=True)
+			r = session.get(url+link, verify=False, timeout=5, headers=header, allow_redirects=False)
 			if r.status_code == requests.codes.ok:
 				found_list.append(url+link)
 			elif r.status_code == requests.codes.temporary_redirect:
@@ -100,13 +101,15 @@ def main():
 		parser.print_help()
 	else:
 		try:
-			print(f'{LR} [-----Starting Script-----]')
+			print(f'{LR}[------------------Starting Script------------------]')
 			checkRobots(url)
 			dirEnum(url, wordlist)
 			_tree(found_list, not_found_list, not_allowed_list, redirects_list)
 		except KeyboardInterrupt:
 			logging.debug('You Pressed Something While The Script Is Running')
 			print(f'{R}[!!] Keyboard Interruption [!!]')
-
+		except requests.exceptions.MissingSchema:
+			logging.error('Missing Http Schema')
+			print(f'{LC}[!!] Please Add https:// or http:// in your url [!!]')
 if __name__ == '__main__':
 	main()
