@@ -23,3 +23,6 @@ python pyfuzzer.py -h
 python3 pyfuzzer.py -h
 </code>
 </pre>
+## To do
+* Async
+* Improve Ui 
