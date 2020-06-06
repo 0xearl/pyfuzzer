@@ -1,6 +1,10 @@
+#!/usr/bin/python3
+
 import requests, re, urllib3, argparse, os, logging
 import socket
-from anytree import Node, RenderTree
+import os
+
+
 try:
     from colorama import init
     init()
@@ -11,7 +15,11 @@ try:
     LC = '\033[1;36m'
 except:
     pass
-    R, G, B, LR, LC = ''
+    R = ''
+    G = ''
+    B = ''
+    LR = ''
+    LC = ''
 
 urllib3.disable_warnings()
 session = requests.Session()
@@ -19,8 +27,8 @@ header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/5
 found_list = []
 redirects_list = []
 not_allowed_list = []
-not_found_list = []
 logging.basicConfig(filename='debug.log', level=logging.DEBUG)
+terminal_size = os.get_terminal_size().columns
 
 def checkRobots(url):
 	r = session.get(url+'robots.txt', verify=False)
@@ -28,15 +36,15 @@ def checkRobots(url):
 		lines = r.text.splitlines()
 		for keyword in lines:
 			if re.search('admin|api|controll_panel|users|usarios|administrator|json|login|php|uploads|manager|dev|FCKEditor|old|db|private|members', keyword):
-				print(f'{G}Found {keyword}')
+				print(f'{G}Found {keyword}'.center(terminal_size))
 			else:
 				pass
 	else:
-		print(f'{R}[!] Robots.txt was not found. [!]\n')
+		print(f'{R}[!] Robots.txt was not found. [!]\n'.center(terminal_size))
 
 def dirEnum(url, wordlist):
 	try:
-		print(f'{B}[!] Please Wait.... [!]')
+		print(f'{R}Please Wait'.center(terminal_size))
 		print('\n')
 		for link in open(wordlist).read().splitlines():
 			r = session.get(url+link, verify=False, timeout=5, headers=header, allow_redirects=False)
@@ -47,44 +55,33 @@ def dirEnum(url, wordlist):
 			elif r.status_code == requests.codes.unauthorized or r.status_code == requests.codes.not_acceptable:
 				not_allowed_list.append(url+link)
 			else:
-				not_found_list.append(url+link)
+				pass
+
 	except requests.exceptions.ConnectionError:
 		logging.critical('Internet is Down')
-		print(f'{R}[!!] Connection Error Please Check Your Internet. [!!]')
+		print(f'{R}[!!] Connection Error Please Check Your Internet. [!!]'.center(terminal_size))
 	except socket.gaierror:
 		logging.error('Something Happend Bruh')
-		print(f'{LC}[!!] Something Happend Please Try Again. [!!]')
+		print(f'{LC}[!!] Something Happend Please Try Again. [!!]'.center(terminal_size))
 	except KeyboardInterrupt:
-		logging.debug('You pressed Something while the script is running')
+		logging.debug('You pressed Something while the script is running'.center(terminal_size))
 		print(f'{R}[!!] Keyboard Interruption [!!]')
 	except requests.exceptions.ReadTimeout:
 		logging.warning('Try Increasing The timeout')
-		print(f'{LC}[!!] Timeout Error Please Try Increasing The Timeout [!!]')
+		print(f'{LC}[!!] Timeout Error Please Try Increasing The Timeout [!!]'.center(terminal_size))
 
-def _tree(found_list, redirects_list, not_allowed_list, not_found_list):
-	not_found = Node(f'{R}[!] Not Found Directories [!]')
-	for url in not_found_list:
-		found_url = Node(url, parent=not_found)
-	for pre,fill,node in RenderTree(not_found):
-		print(f'{R}{pre}{node.name}')
+def result(found_list, redirects_list, not_allowed_list):
+	try:
+		for dirs in found_list:
+			print(f'\033[1m{G}Directory/Page:{dirs}		Status:[200]\n')
 
-	found = Node(f'{G}[+] Found Directories [+]')
-	for url in found_list:
-		found_url = Node(url, parent=found)
-	for pre,fill,node in RenderTree(found):
-		print(f'{G}{pre}{node.name}')
+		for dirs in not_allowed_list:
+			print(f'\033[1m{R}Directory/Page:{dirs}		Status:[400]\n')
 
-	not_allowed = Node(f'{R}[!] Not Allowed Directories [!]')
-	for url in not_allowed_list:
-		found_url = Node(url, parent=not_allowed)
-	for pre,fill,node in RenderTree(not_allowed):
-		print(f'{R}{pre}{node.name}')
-
-	redirects = Node(f'{LC}[!] Redirecting Directories [!]')
-	for url in redirects_list:
-		found_url = Node(url, parent=redirects)
-	for pre,fill,node in RenderTree(redirects):
-		print(f'{LC}{pre}{node.name}')
+		for dirs in redirects_list:
+			print(f'\033[1m{LC}Directory/Page:{dirs}	Status:[302]\n')
+	except exceptions:
+		pass
 
 def main():
 	parser = argparse.ArgumentParser(description='Pyfuzzer is a Directory-Enumerator')
@@ -101,15 +98,15 @@ def main():
 		parser.print_help()
 	else:
 		try:
-			print(f'{LR}[------------------Starting Script------------------]')
+			print(f'{LR}Starting Script'.center(terminal_size))
 			checkRobots(url)
 			dirEnum(url, wordlist)
-			_tree(found_list, not_found_list, not_allowed_list, redirects_list)
+			result(found_list, not_allowed_list, redirects_list)
 		except KeyboardInterrupt:
 			logging.debug('You Pressed Something While The Script Is Running')
-			print(f'{R}[!!] Keyboard Interruption [!!]')
+			print(f'{R}[!!] Keyboard Interruption [!!]'.center(terminal_size))
 		except requests.exceptions.MissingSchema:
-			logging.error('Missing Http Schema')
-			print(f'{LC}[!!] Please Add https:// or http:// in your url [!!]')
+			logging.error('Missing http Schema')
+			print(f'{LC}[!!] Please Add https:// or http:// in your url [!!]'.center(terminal_size))
 if __name__ == '__main__':
 	main()
