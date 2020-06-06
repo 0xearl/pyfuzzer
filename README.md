@@ -1,4 +1,4 @@
-# pyfuzzer
+# PyFuzzer
 A Python Directory-Enumeration I Made My Own Way I Guess?<br>
 To Run This Script One Must Have Brain<br>
 ## Installation<br>
@@ -25,4 +25,5 @@ python3 pyfuzzer.py -h
 </pre>
 ## To do
 * Async
-* Improve Ui 
+* Improve Ui
+* Improve Script Algorithm
