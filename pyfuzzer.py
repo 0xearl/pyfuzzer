@@ -45,7 +45,7 @@ def checkRobots(url):
 
 def dirEnum(url, wordlist):
 	try:
-		print(f'{R}\033[1mPlease Wait'.center(terminal_size))
+		print(f'{LC}\033[1mPlease Wait'.center(terminal_size))
 		for link in open(wordlist).read().splitlines():
 			print(f'Trying {url+link}'.center(terminal_size), end='\r\r')
 			r = session.get(url+link, verify=False, timeout=5, headers=header, allow_redirects=False)
@@ -58,33 +58,36 @@ def dirEnum(url, wordlist):
 			else:
 				pass
 	except requests.exceptions.ConnectionError:
-		logging.critical('Internet is Down')
 		print(f'{R}[!!] Connection Error Please Check Your Internet. [!!]'.center(terminal_size))
+		logging.critical('Internet is Down')
 	except socket.gaierror:
-		logging.error('Something Happend Bruh')
 		print(f'{LC}[!!] Something Happend Please Try Again. [!!]'.center(terminal_size))
+		logging.error('Something Happend Bruh')
 	except KeyboardInterrupt:
 		logging.debug('You pressed Something while the script is running'.center(terminal_size))
 		print(f'{R}[!!] Keyboard Interruption [!!]')
 	except requests.exceptions.ReadTimeout:
-		logging.warning('Try Increasing The timeout')
 		print(f'{LC}[!!] Timeout Error Please Try Increasing The Timeout [!!]'.center(terminal_size))
+		logging.warning('Try Increasing The timeout')
 	except requests.MaxRetryError:
-		logging.error('Max Retry Error')
 		print(f'{LC}[!!] Max Retry Error Please Try Again. [!!]'.center(terminal_size))
+		logging.error('Max Retry Error')		
 
 def result(found_list, redirects_list, not_allowed_list):
-	try:
-		for dirs in found_list:
-			print(f'{G}\033[1m{dirs}		Status:[200]')
+	if(found_list != None or redirects_list != None or not_allowed_list != None):
+		try:
+			for dirs in found_list:
+				print(f'{G}\033[1m{dirs}	Status:[200]')
 
-		for dirs in not_allowed_list:
-			print(f'{R}\033[1m{dirs}		Status:[400]')
+			for dirs in not_allowed_list:
+				print(f'{R}\033[1m{dirs}	Status:[400]')
 
-		for dirs in redirects_list:
-			print(f'{LC}\033[1m{dirs}	Status:[302]')
-	except exceptions:
-		pass
+			for dirs in redirects_list:
+				print(f'{LC}\033[1m{dirs}	Status:[302]')
+		except:
+			pass
+	else:
+		print(f'{R}Nothing was found'.center(terminal_size))
 
 def main():
 	parser = argparse.ArgumentParser(description='Pyfuzzer is a Directory-Enumerator')
